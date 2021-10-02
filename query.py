@@ -9,5 +9,9 @@ def get_data(key, minutes):
 def query_parser(data):
     json_string = json.loads(data)
     response_data = json_string["ResponseData"]
-    return response_data
+    buses = response_data["Buses"]
+    rtn = []
+    for bus in buses:
+        rtn.append([bus["LineNumber"], bus["Destination"], bus["DisplayTime"]])
+    return rtn
     
