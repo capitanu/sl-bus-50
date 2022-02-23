@@ -9,16 +9,18 @@ from PIL import ImageTk, Image
 import os
 import requests
 import json
-
+from fontTools.ttLib import TTFont
 
 TIME = 3
 
 displayed_data = [['Init'],[],[]]
 
+font = TTFont("Starjedi.ttf")
+
 root = tk.Tk()
 root.configure(background = "white")
 root.geometry("1920x1080")
-bg = PhotoImage(file = "christmas.png")
+bg = PhotoImage(file = "starwars.png")
 
 canvas = Canvas(root, width=1920, height=1080)
 canvas.pack(expand=YES, fill=BOTH)
@@ -54,7 +56,7 @@ def query_parser(data):
                     dt = 60 - int(now.minute) + int(dt[3:5])
                 dt = "{} min".format(dt)
                 
-            rtn.append([bus["LineNumber"], bus["Destination"], dt])
+            rtn.append([bus["LineNumber"], bus["Destination"].upper(), dt])
         return rtn
     except:
         return []
@@ -94,10 +96,9 @@ def failed_case():
     
 
     for i, bus in enumerate(busses):
-        canvas.create_text(1920/6, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[0], tag="line{}0".format(i))
-        canvas.create_text(1920/6 + 1920/3, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[1], tag="line{}1".format(i))
-        canvas.create_text(1920/6 + 2*1920/3, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[2], tag="line{}2".format(i))
-
+        canvas.create_text(1920/6 - 100*i, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+3)*10), text=bus[0], tag="line{}0".format(i))
+        canvas.create_text(1920/6 + 1920/3, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+4)*10), text=bus[1], tag="line{}1".format(i))
+        canvas.create_text(1920/6 + 2*1920/3 + 100*i, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+3)*10), text=bus[2], tag="line{}2".format(i))
 
 def query_do():
     try:
@@ -126,15 +127,15 @@ def init_ui():
     root.attributes("-fullscreen", True)
     
     for i, bus in enumerate(data):
-        canvas.create_text(1920/6, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[0], tag="line{}0".format(i))
-        canvas.create_text(1920/6 + 1920/3, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[1], tag="line{}1".format(i))
-        canvas.create_text(1920/6 + 2*1920/3, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[2], tag="line{}2".format(i))
+        canvas.create_text(1920/6 - 100*i, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+3)*10), text=bus[0], tag="line{}0".format(i))
+        canvas.create_text(1920/6 + 1920/3, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+4)*10), text=bus[1], tag="line{}1".format(i))
+        canvas.create_text(1920/6 + 2*1920/3 + 100*i, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+3)*10), text=bus[2], tag="line{}2".format(i))
+    
     root.after(30, update_ui)
 
 
 def update_ui():
 
-    print("UPDATE UI")
     data = query_do()
 
     if data == "failed case":
@@ -151,10 +152,11 @@ def update_ui():
         canvas.delete("line{}2".format(i))
     while len(data) < 3:
         data.append(['','',''])
+    
     for i, bus in enumerate(data):
-        canvas.create_text(1920/6, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[0], tag="line{}0".format(i))
-        canvas.create_text(1920/6 + 1920/3, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[1], tag="line{}1".format(i))
-        canvas.create_text(1920/6 + 2*1920/3, 1080/6 + i*1080/3, fill="green", font=("Arial", 60), text=bus[2], tag="line{}2".format(i))
+        canvas.create_text(1920/6 - 100*i, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+3)*10), text=bus[0], tag="line{}0".format(i))
+        canvas.create_text(1920/6 + 1920/3, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+4)*10), text=bus[1], tag="line{}1".format(i))
+        canvas.create_text(1920/6 + 2*1920/3 + 100*i, 1080/6 + i*1080/3, fill="yellow", font=("Starjedi", (i+3)*10), text=bus[2], tag="line{}2".format(i))
     if not time:
         root.after(300000, update_ui)
     else:
